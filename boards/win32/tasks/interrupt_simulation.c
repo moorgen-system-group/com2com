@@ -33,6 +33,7 @@
 /*---------- function prototype ----------*/
 /*---------- variable ----------*/
 static uint8_t com0_buffer[1024];
+static uint8_t com1_buffer[1024];
 static uint64_t ticks;
 static SemaphoreHandle_t mutex;
 
@@ -77,6 +78,34 @@ static void _com0_irq(void)
     } while(0);
 }
 
+static void _com1_irq(void)
+{
+    static void *dev = NULL;
+    static int8_t comport = -1;
+    int32_t count = 0;
+
+    do {
+        if(!dev) {
+            dev = resources_get("dev_com1");
+            if(!dev) {
+                break;
+            }
+        }
+        if(comport < 0) {
+            device_ioctl(dev, IOCTL_SERIAL_GET_COMPORT, &comport);
+            if(comport > 0) {
+                comport--;
+            }
+        }
+        count = RS232_PollComport(comport, com1_buffer, ARRAY_SIZE(com1_buffer));
+        if(count <= 0) {
+            break;
+        }
+        device_irq_process(dev, (uint32_t)_com1_irq, com1_buffer, count);
+        memset(com1_buffer, 0, count);
+    } while(0);
+}
+
 static void _task(void *argv)
 {
     _init();
@@ -84,6 +113,7 @@ static void _task(void *argv)
         __delay_ms(1);
         _ticks_inc();
         _com0_irq();
+        _com1_irq();
     }
 }
 

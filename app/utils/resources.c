@@ -54,11 +54,13 @@ static resource_manager_base_t resources;
 static void _resources_init(void)
 {
     IMPORT_DEVICE(com0);
+    IMPORT_DEVICE(com1);
 }
 
 static void _resources_deinit(void)
 {
     EXPORT_DEVICE(com0);
+    EXPORT_DEVICE(com1);
 }
 
 void resources_init(void)

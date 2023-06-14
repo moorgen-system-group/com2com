@@ -63,7 +63,7 @@ function help_info()
     echo "  -g=<build tools>   = select the build tools, the value can be either make of ninja, default is make"
     echo "  --debug            = select the debug level"
     echo "  --release          = select the debug level"
-    echo "  --name=<program>   = specify the project name, default name is 'demo'"
+    echo "  --plat=<program>   = specify the project name"
     echo "  --download         = download firmware by jlink"
     echo "  --erase            = erase the chip flash by jlink"
 }
