@@ -25,6 +25,7 @@
 #include "serial.h"
 #include "rs232.h"
 #include "resources.h"
+#include "systicks.h"
 #include "options.h"
 
 /*---------- macro ----------*/
@@ -38,11 +39,6 @@ static uint64_t ticks;
 static SemaphoreHandle_t mutex;
 
 /*---------- function ----------*/
-static void _init(void)
-{
-    mutex = xSemaphoreCreateMutex();
-}
-
 static void _ticks_inc(void)
 {
     xSemaphoreTake(mutex, portMAX_DELAY);
@@ -106,14 +102,21 @@ static void _com1_irq(void)
     } while(0);
 }
 
+static void _init(void)
+{
+    mutex = xSemaphoreCreateMutex();
+    assert(mutex);
+    systicks_add(_ticks_inc);
+    systicks_add(_com0_irq);
+    systicks_add(_com1_irq);
+}
+
 static void _task(void *argv)
 {
     _init();
     for(;;) {
         __delay_ms(1);
-        _ticks_inc();
-        _com0_irq();
-        _com1_irq();
+        systicks_polling();
     }
 }
 
