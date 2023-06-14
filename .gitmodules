@@ -1,0 +1,6 @@
+[submodule "components/freertos"]
+	path = components/freertos
+	url = git@github.com:FreeRTOS/FreeRTOS-Kernel.git
+[submodule "components/tiny-sdk"]
+	path = components/tiny-sdk
+	url = git@github.com:HinsShum/tiny-sdk.git
