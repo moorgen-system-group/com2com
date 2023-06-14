@@ -1,9 +1,9 @@
 /**
- * @file app\tasks\inc\tasks_def.h
+ * @file app\tasks\halfduplex\inc\halfduplex_ops.h
  *
  * Copyright (C) 2023
  *
- * tasks_def.h is free software: you can redistribute it and/or modify
+ * halfduplex_ops.h is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -20,8 +20,8 @@
  *
  * @encoding utf-8
  */
-#ifndef __TASKS_DEF_H
-#define __TASKS_DEF_H
+#ifndef __HALFDUPLEX_OPS_H
+#define __HALFDUPLEX_OPS_H
 
 #ifdef __cplusplus
 extern "C"
@@ -32,29 +32,15 @@ extern "C"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include "options.h"
+#include "serial_transport_level.h"
 
 /*---------- macro ----------*/
-/* task stack size definition
- */
-#define TASK_DAEMON_STACKSIZE                       (1024)
-#define TASK_HALFDUPLEX_STACKSIZE                   (1024)
-#define TASK_FULLDUPLEX_STACKSIZE                   (1024)
-
-/* task priority definition
- */
-#define TASK_DAEMON_PRIO                            (tskIDLE_PRIORITY + 1)
-#define TASK_HALFDUPLEX_PRIO                        (tskIDLE_PRIORITY + 2)
-#define TASK_FULLDUPLEX_PRIO                        (tskIDLE_PRIORITY + 3)
-
 /*---------- type define ----------*/
 /*---------- variable prototype ----------*/
 /*---------- function prototype ----------*/
-extern void task_daemon_create(void);
-extern void task_halfduplex_create(void);
-extern void task_fullduplex_create(void);
+extern void halfduplex_ops_get(struct serial_mac_ops *ops);
 
 #ifdef __cplusplus
 }
 #endif
-#endif /* __TASKS_DEF_H */
+#endif /* __HALFDUPLEX_OPS_H */

@@ -35,6 +35,9 @@ static void _init(void)
 {
     /* initialize resources */
     resources_init();
+    /* create other tasks */
+    task_halfduplex_create();
+    task_fullduplex_create();
 }
 
 static void _task(void *argv)

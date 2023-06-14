@@ -36,7 +36,7 @@ static uint16_t bsp_write(uint8_t *pbuf, uint16_t length);
 
 /*---------- variable ----------*/
 static serial_describe_t com = {
-    .comport = 4,
+    .comport = 8,
     .baudrate = 19200,
     .ops.init = bsp_init,
     .ops.deinit = bsp_deinit,

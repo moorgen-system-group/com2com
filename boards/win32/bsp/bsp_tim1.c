@@ -60,7 +60,7 @@ static bool bsp_init(void)
     if(tim.freq > configTICK_RATE_HZ) {
         tim.freq = configTICK_RATE_HZ;
     }
-    tick = __ms2ticks(1000 / tim.freq);
+    tick = __ms2ticks(1000 / tim.freq) + 10;
     _timer = xTimerCreate("tim", tick, pdFALSE, NULL, bsp_callback);
 
     return (_timer != NULL);

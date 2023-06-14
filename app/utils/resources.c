@@ -55,12 +55,16 @@ static void _resources_init(void)
 {
     IMPORT_DEVICE(com0);
     IMPORT_DEVICE(com1);
+    IMPORT_DEVICE(tim0);
+    IMPORT_DEVICE(tim1);
 }
 
 static void _resources_deinit(void)
 {
     EXPORT_DEVICE(com0);
     EXPORT_DEVICE(com1);
+    EXPORT_DEVICE(tim0);
+    EXPORT_DEVICE(tim1);
 }
 
 void resources_init(void)
