@@ -23,8 +23,9 @@
 
 /*---------- includes ----------*/
 #include "serial.h"
-#include "options.h"
 #include "rs232.h"
+#include "resources.h"
+#include "options.h"
 
 /*---------- macro ----------*/
 /*---------- type define ----------*/
@@ -50,19 +51,30 @@ static void _ticks_inc(void)
 
 static void _com0_irq(void)
 {
+    static void *dev = NULL;
     static int8_t comport = -1;
     int32_t count = 0;
 
-    if(comport < 0) {
-        device_ioctl(NULL, IOCTL_SERIAL_GET_COMPORT, &comport);
-        if(comport > 0) {
-            comport -= 1;
+    do {
+        if(!dev) {
+            dev = resources_get("dev_com0");
+            if(!dev) {
+                break;
+            }
         }
-    }
-    if((count = RS232_PollComport(comport, com0_buffer, ARRAY_SIZE(com0_buffer))) > 0) {
-        device_irq_process(NULL, (uint32_t)_com0_irq, com0_buffer, count);
+        if(comport < 0) {
+            device_ioctl(dev, IOCTL_SERIAL_GET_COMPORT, &comport);
+            if(comport > 0) {
+                comport--;
+            }
+        }
+        count = RS232_PollComport(comport, com0_buffer, ARRAY_SIZE(com0_buffer));
+        if(count <= 0) {
+            break;
+        }
+        device_irq_process(dev, (uint32_t)_com0_irq, com0_buffer, count);
         memset(com0_buffer, 0, count);
-    }
+    } while(0);
 }
 
 static void _task(void *argv)

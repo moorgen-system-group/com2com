@@ -7,5 +7,6 @@
 cmake_minimum_required(VERSION 3.1)
 
 set(SERIAL "y")
+set(RESOURCE_MANAGER "y")
 # set(PINGPONG_BUFFER "y")
 # set(MAC_SERIAL "y")
