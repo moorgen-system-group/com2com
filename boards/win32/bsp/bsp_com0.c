@@ -24,7 +24,10 @@
 /*---------- includes ----------*/
 #include "serial.h"
 #include "rs232.h"
+#include "utils.h"
 #include "options.h"
+#include <stdio.h>
+#include <string.h>
 
 /*---------- macro ----------*/
 /*---------- type define ----------*/
@@ -47,12 +50,49 @@ static serial_describe_t com = {
 DEVICE_DEFINED(com0, serial, &com);
 
 /*---------- function ----------*/
+static void _get_cfg(void)
+{
+    FILE *fp = NULL;
+    char line[128] = {0};
+    char *p = NULL;
+    char *argv[3] = {NULL};
+    uint32_t comport = 0;
+    uint32_t baudrate = 0;
+
+    fp = fopen("cfg.ini", "r");
+    if(fp) {
+        while(!feof(fp)) {
+            memset(line, 0, ARRAY_SIZE(line));
+            fgets(line, ARRAY_SIZE(line), fp);
+            p = strstr(line, "com0");
+            if(p) {
+                utils_nsplit(line, ':', ARRAY_SIZE(argv), argv);
+                if(argv[1]) {
+                    comport = strtoul(argv[1], NULL, 10);
+                    if(comport > 0 && comport < 65) {
+                        com.comport = comport;
+                    }
+                }
+                if(argv[2]) {
+                    baudrate = strtoul(argv[2], NULL, 10);
+                    if(baudrate) {
+                        com.baudrate = baudrate;
+                    }
+                }
+                break;
+            }
+        }
+    }
+}
+
 static bool bsp_init(void)
 {
     bool retval = true;
     char mode[] = {'8', 'N', '1', 0};
-    uint32_t comport = (com.comport == 0) ? com.comport : com.comport - 1;
+    uint32_t comport = 0;
 
+    _get_cfg();
+    comport = (com.comport == 0) ? com.comport : com.comport - 1;
     /* 0:COM1, 1:COM2... */
     if(RS232_OpenComport(comport, com.baudrate, mode) != 0) {
         retval = false;

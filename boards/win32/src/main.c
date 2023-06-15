@@ -32,7 +32,7 @@ extern void task_interrupt_create(void);
 
 /*---------- variable ----------*/
 /*---------- function ----------*/
-int32_t main(void)
+int main(int argc, char *argv)
 {
     task_interrupt_create();
     task_daemon_create();
